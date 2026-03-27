@@ -1,4 +1,7 @@
 package com.corporation_dev.user_microservice.controller;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +13,10 @@ import com.corporation_dev.user_microservice.dto.UserDto;
 import com.corporation_dev.user_microservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("user")
@@ -27,9 +30,23 @@ public class UserController {
 
     @Operation(summary = "Get all users", description = "Returns a list of all users in the system")
     @GetMapping("all")
-    public Flux<UserDto> getAllUsers() {
-        return this.userService.getAllUsers();
+    public Mono<ResponseEntity<Map<String, Object>>> getAllUsers() {
+        return this.userService.getAllUsers()
+            .collectList()
+            .map(users -> {
+                Map<String, Object> res = new HashMap<>();
+                res.put("status", true);
+                res.put("users", users);
+                return ResponseEntity.ok(res);
+            })
+            .defaultIfEmpty(ResponseEntity.notFound().build());
     }
+
+    // @GetMapping("all")
+    // public Flux<UserDto> getAllUsers() {
+    //     return this.userService.getAllUsers();
+    // }
+    
 
     @Operation(summary = "Insert a new user", description = "Inserts a new user into the system")
     @PostMapping("insert")
