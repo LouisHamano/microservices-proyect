@@ -23,6 +23,7 @@ public class UserService {
             .map(EntityDtoUtil::toDto);
     }
 
+    /* Insertar un nuevo usuario */
     @CircuitBreaker(name = "insertUserCircuitBreaker", fallbackMethod = "insertUserFallback")
     public Mono<UserDto> insertUser(Mono<UserDto> userDto) {
         return userDto.map(EntityDtoUtil::toEntity)
@@ -35,6 +36,21 @@ public class UserService {
         return Mono.error(new RuntimeException("Servicio de usuarios no disponible temporalmente"));
     }
 
+    /* Actualizar un usuario existente */
+    public Mono<UserDto> updateUser(int id, Mono<UserDto> userDto) {
+        return userRepository.findById(id)
+            .flatMap(existingUser -> userDto.map(EntityDtoUtil::toEntity))
+            .doOnNext(newUser -> newUser.setId(id))
+            .flatMap(userRepository::save)
+            .map(EntityDtoUtil::toDto);
+    }
+
+    /* Eliminar usuario por ID */
+    public Mono<Void> deleteUser(int id) {
+        return userRepository.deleteById(id);
+    }
+
+    /* Probar el circuit breaker */
     @CircuitBreaker(name = "testCircuitBreaker", fallbackMethod = "testCircuitBreakerFallback")
     public Mono<String> testCircuitBreaker() {
         return webClient
@@ -51,23 +67,4 @@ public class UserService {
         System.out.println("-> FALLBACK ejecutado: Servicio temporalmente no disponible");
         return Mono.just("Fallback: Servicio no disponible");
     }
-
-    /* Falta implementar */
-    // Actualizar un usuario existente
-    // public Mono<User> updateUser(int id, User userDetails) {
-    //     return userRepository.findById(id)
-    //         .flatMap(existingUser -> {
-    //             existingUser.setName(userDetails.getName());
-    //             existingUser.setEmail(userDetails.getEmail());
-    //             existingUser.setPassword(userDetails.getPassword());
-    //             existingUser.setRole(userDetails.getRole());
-    //             existingUser.setStatus(userDetails.getStatus());
-    //             return userRepository.save(existingUser);
-    //         });
-    // }
-
-    // // Eliminar un usuario
-    // public Mono<Void> deleteUser(int id) {
-    //     return userRepository.deleteById(id);
-    // }
 }
