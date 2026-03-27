@@ -2,6 +2,7 @@ package com.corporation_dev.user_microservice.dto;
 
 import lombok.Data;
 import lombok.ToString;
+import java.time.LocalDate;
 
 @Data
 @ToString
@@ -12,6 +13,6 @@ public class UserDto {
     private String password;
     private String role;
     private String status;
-    private String created_at;
-    private String updated_at;
+    private LocalDate created_at;
+    private LocalDate updated_at;
 }

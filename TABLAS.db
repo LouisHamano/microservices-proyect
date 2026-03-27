@@ -1,3 +1,4 @@
+// MYSQL
 CREATE TABLE users (
 	ID INT AUTO_INCREMENT PRIMARY KEY,
     NAME VARCHAR(50),
@@ -7,4 +8,16 @@ CREATE TABLE users (
     STATUS VARCHAR(100),
     CREATED_AT DATE,
     UPDATED_AT DATE
+);
+
+// POSTGRES
+CREATE TABLE users (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(50),
+    email VARCHAR(100),
+    password VARCHAR(100),
+    role VARCHAR(100),
+    status VARCHAR(100),
+    created_at DATE,
+    updated_at DATE
 );

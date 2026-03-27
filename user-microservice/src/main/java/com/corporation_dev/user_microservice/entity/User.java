@@ -5,6 +5,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.Data;
 import lombok.ToString;
+import java.time.LocalDate;
 
 @Data
 @ToString
@@ -24,7 +25,7 @@ public class User {
     @Column("STATUS")
     private String status;
     @Column("CREATED_AT")
-    private String created_at;
+    private LocalDate created_at;
     @Column("UPDATED_AT")
-    private String updated_at;
+    private LocalDate updated_at;
 }   
