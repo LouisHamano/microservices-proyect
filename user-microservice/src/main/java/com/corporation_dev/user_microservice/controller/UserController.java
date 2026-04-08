@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 @Tag(name = "User API", description = "Endpoints for managing users")
 public class UserController {
     private UserService userService;
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @Operation(summary = "Get all users", description = "Returns a list of all users in the system")
-    @GetMapping("all")
+    @GetMapping("/all")
     public Mono<ResponseEntity<Map<String, Object>>> getAllUsers() {
         return this.userService.getAllUsers()
             .collectList()
@@ -49,7 +49,7 @@ public class UserController {
     
 
     @Operation(summary = "Insert a new user", description = "Inserts a new user into the system")
-    @PostMapping("insert")
+    @PostMapping("/insert")
     public Mono<ResponseEntity<UserDto>> insertUser(@RequestBody Mono<UserDto> userDto) {
         return this.userService.insertUser(userDto)
             .map(ResponseEntity::ok)
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @Operation(summary = "Update an existing user", description = "Updates an existing user in the system")
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public Mono<ResponseEntity<UserDto>> updateUser(@PathVariable int id, @RequestBody Mono<UserDto> userDto) {
         // return userService.updateUser(id, userDto);
 
@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @Operation(summary = "Delete a user", description = "Deletes a user from the system by ID")
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> deleteUser(@PathVariable int id) {
         return this.userService.deleteUser(id)
             .thenReturn(ResponseEntity.ok().<Void>build())
@@ -76,7 +76,7 @@ public class UserController {
 
      /* Probar el circuit breaker */
      @Operation(summary = "Test circuit breaker", description = "Tests the circuit breaker functionality")
-    @GetMapping("test")
+    @GetMapping("/test")
     public Mono<ResponseEntity<String>> testCircuit() {
         return userService.testCircuitBreaker()
             .map(ResponseEntity::ok)
