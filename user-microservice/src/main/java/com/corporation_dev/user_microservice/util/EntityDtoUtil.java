@@ -1,7 +1,5 @@
 package com.corporation_dev.user_microservice.util;
-
 import org.springframework.beans.BeanUtils;
-
 import com.corporation_dev.user_microservice.dto.UserDto;
 import com.corporation_dev.user_microservice.entity.User;
 import java.time.LocalDate;
