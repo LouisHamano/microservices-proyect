@@ -75,7 +75,7 @@ public class UserController {
     }
 
      /* Probar el circuit breaker */
-     @Operation(summary = "Test circuit breaker", description = "Tests the circuit breaker functionality")
+    @Operation(summary = "Test circuit breaker", description = "Tests the circuit breaker functionality")
     @GetMapping("/test")
     public Mono<ResponseEntity<String>> testCircuit() {
         return userService.testCircuitBreaker()
