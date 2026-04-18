@@ -24,12 +24,13 @@ public class ProductService {
     @CircuitBreaker(name = "getAllProductsCircuitBreaker", fallbackMethod = "getAllProductsFallback")
     public Flux<ProductDto> getAllProducts() {
         return this.productRepository.findAll()
+            // .doOnNext(p -> System.out.println("PRODUCTO: " + p))
             .map(EntityDtoUtil::toDto);
     }
 
-    public Flux<ProductDto> getAllProductsFallback(Throwable ex) {
-        System.out.println("Fallback - Error: " + ex.getMessage());
-        return Flux.error(new RuntimeException("Servicio de usuarios no disponible temporalmente"));
+    public Flux<String> getAllProductsFallback(Throwable ex) {
+        System.out.println("Fallback - Error REAL: " + ex.getMessage());
+        return Flux.just("Fallback: Servicio no disponible");
     }
 
     /* Obtener producto por id */
@@ -39,8 +40,9 @@ public class ProductService {
             .map(EntityDtoUtil::toDto);
     }
 
-    public Mono<ProductDto> getProductByIdFallback(Throwable ex) {
-        return Mono.error(new RuntimeException("Servicio de usuarios no disponible temporalmente"));
+    public Mono<String> getProductByIdFallback(Throwable ex) {
+        System.out.println("Fallback - Error REAL: " + ex.getMessage());
+        return Mono.just("Fallback: Servicio no disponible");
     }
 
     /* Insertar producto */
@@ -51,8 +53,9 @@ public class ProductService {
             .map(EntityDtoUtil::toDto);
     }
 
-    public Mono<ProductDto> insertProductFallback(Throwable ex) {
-        return Mono.error(new RuntimeException("Servicio de usuarios no disponible temporalmente"));
+    public Mono<String> insertProductFallback(Throwable ex) {
+        System.out.println("Fallback - Error REAL: " + ex.getMessage());
+        return Mono.just("Fallback: Servicio no disponible");
     }
 
     /* Actualizar producto */
@@ -65,9 +68,9 @@ public class ProductService {
             .map(EntityDtoUtil::toDto);
     }
 
-    public Mono<ProductDto> updateProductByIdFallback(Throwable ex) {
-        System.out.println("Fallback - Error: " + ex.getMessage());
-        return Mono.error(new RuntimeException("Servicio de usuarios no disponible temporalmente"));
+    public Mono<String> updateProductByIdFallback(Throwable ex) {
+        System.out.println("Fallback - Error REAL: " + ex.getMessage());
+        return Mono.just("Fallback: Servicio no disponible");
     }
 
     /* Probar el circuit breaker */
