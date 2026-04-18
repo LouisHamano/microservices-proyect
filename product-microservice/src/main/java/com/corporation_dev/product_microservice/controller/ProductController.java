@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.corporation_dev.product_microservice.dto.ProductDto;
 import com.corporation_dev.product_microservice.service.ProductService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import reactor.core.publisher.Mono;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/product")
+@Tag(name = "Products API", description = "Endpoints for managing products")
 public class ProductController {
     private ProductService productService;
 
@@ -24,6 +28,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @Operation(summary = "Get all products", description = "Returns a list of all products in the system")
     @GetMapping("/all")
     public Mono<ResponseEntity<Map<String, Object>>> getAllProducts() {
         return this.productService.getAllProducts()
@@ -37,6 +42,7 @@ public class ProductController {
             .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Get product by Id", description = "Return product find by Id")
     @GetMapping("/{id}")
     public Mono<ResponseEntity<Map<String, Object>>> getProductById(@PathVariable int id) {
         return this.productService.getProductById(id)
