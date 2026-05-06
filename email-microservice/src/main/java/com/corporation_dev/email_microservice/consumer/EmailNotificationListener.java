@@ -14,15 +14,13 @@ public class EmailNotificationListener {
         this.emailService = emailService;
     }
 
-    // @KafkaListener(topics = "products-topic", groupId = "email-service")
-    // public void handleProductCreated(ProductCreatedEvent event) {
-    //     // emailService.sendNotification(event);
-
-    //     System.out.println("Received event: " + event);
-    // }
-
     @KafkaListener(topics = "products-topic", groupId = "email-service")
-    public void test(String raw) {
-        System.out.println("RAW: " + raw);
+    public void handleProductCreated(ProductCreatedEvent event) {
+        System.out.println("========================================");
+        System.out.println("=========== EVENTO DETECTADO ===========");
+        System.out.println(event);
+
+        emailService.sendNotification(event);
+        System.out.println("=========== CORREO ENVIADO! ============");
     }
 }

@@ -26,7 +26,7 @@ public class KafkaConsumerConfig {
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 
         return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(),
-                new JsonDeserializer<>(ProductCreatedEvent.class));
+                new JsonDeserializer<>(ProductCreatedEvent.class, false));
     }
 
     @Bean

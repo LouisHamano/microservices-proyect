@@ -22,10 +22,10 @@ spring:
                 headers: false
 
   mail:
-    host: smtp.example.com
+    host: smtp.gmail.com
     port: 587
-    username: 
-    password: 
+    username: mario.milla420@gmail.com
+    password: zrdj gwbp hoxf jxye
     properties:
       mail:
         smtp:
