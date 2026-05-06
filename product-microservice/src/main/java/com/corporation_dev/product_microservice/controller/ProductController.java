@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.corporation_dev.product_microservice.dto.ProductDto;
+import com.corporation_dev.product_microservice.event.ProductCreatedEvent;
+import com.corporation_dev.product_microservice.event.ProductEventProducer;
 import com.corporation_dev.product_microservice.service.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,10 +24,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/product")
 @Tag(name = "Products API", description = "Endpoints for managing products")
 public class ProductController {
-    private ProductService productService;
+    private final ProductService productService;
+    private final ProductEventProducer productEventProducer;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ProductEventProducer productEventProducer) {
         this.productService = productService;
+        this.productEventProducer = productEventProducer;
     }
 
     @Operation(summary = "Get all products", description = "Returns a list of all products in the system")
@@ -58,12 +62,22 @@ public class ProductController {
     @PostMapping("/insert")
     public Mono<ResponseEntity<Map<String, Object>>> insertProduct(@RequestBody Mono<ProductDto> productDto) {
         return this.productService.insertProduct(productDto)
+            .doOnSuccess(product -> {
+                ProductCreatedEvent event = new ProductCreatedEvent(
+                    String.valueOf(product.getId()),
+                    product.getName(),
+                    product.getDescription(),
+                    product.getPrice().doubleValue()
+                );
+                productEventProducer.publishProductCreatedEvent(event);
+            })
             .map(product -> {
                 Map<String, Object> res = new HashMap<>();
                 res.put("status", true);
                 res.put("product", product);
                 return ResponseEntity.ok(res);
             })
+            
             .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
